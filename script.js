@@ -32,7 +32,7 @@ const demoOrg = {
   insights: [{ title: "Review load is concentrated", body: "Platform owns most open work and should get reviewer help before release freeze.", severity: "medium" }, { title: "Auth path needs real backend", body: "The prototype token flow is local-only; OAuth callback work is required before private repo use.", severity: "high" }]
 };
 const els = {
-  appShell: document.querySelector("#appShell"), workspace: document.querySelector("#workspace"), repoForm: document.querySelector("#repoForm"), orgForm: document.querySelector("#orgForm"), repoInput: document.querySelector("#repoInput"), orgInput: document.querySelector("#orgInput"), tokenInput: document.querySelector("#tokenInput"), demoButton: document.querySelector("#demoButton"), statusText: document.querySelector("#statusText"), scopeTitle: document.querySelector("#scopeTitle"),
+  appShell: document.querySelector("#appShell"), workspace: document.querySelector("#workspace"), repoForm: document.querySelector("#repoForm"), orgForm: document.querySelector("#orgForm"), repoInput: document.querySelector("#repoInput"), orgInput: document.querySelector("#orgInput"), tokenInput: document.querySelector("#tokenInput"), demoButton: document.querySelector("#demoButton"), presetButtons: document.querySelectorAll("[data-repo-preset]"), statusText: document.querySelector("#statusText"), scopeTitle: document.querySelector("#scopeTitle"),
   repoList: document.querySelector("#repoList"), coreTitle: document.querySelector("#coreTitle"), coreSubtitle: document.querySelector("#coreSubtitle"), connections: document.querySelector("#connections"), ringsLayer: document.querySelector("#ringsLayer"), nodesLayer: document.querySelector("#nodesLayer"), stageWrap: document.querySelector(".stage-wrap"), fullscreenStage: document.querySelector("#fullscreenStage"), restorePanels: document.querySelector("#restorePanels"),
   detailName: document.querySelector("#detailName"), detailSummary: document.querySelector("#detailSummary"), activityList: document.querySelector("#activityList"), prRadar: document.querySelector("#prRadar"), activityFeed: document.querySelector("#activityFeed"), insightList: document.querySelector("#insightList")
 };
@@ -103,10 +103,13 @@ els.restorePanels.addEventListener("click", () => els.workspace.classList.remove
 els.fullscreenStage.addEventListener("click", () => { const full = els.stageWrap.classList.toggle("fullscreen"); els.fullscreenStage.textContent = full ? "Exit" : "Fullscreen"; });
 els.repoForm.addEventListener("submit", async (event) => { event.preventDefault(); try { await loadGithubRepo(els.repoInput.value); } catch (error) { setStatus(`GitHub repo load failed: ${error.message}`, true); } });
 els.orgForm.addEventListener("submit", async (event) => { event.preventDefault(); try { await loadGithubOrg(els.orgInput.value); } catch (error) { setStatus(`GitHub org load failed: ${error.message}`, true); } });
+els.presetButtons.forEach((button) => button.addEventListener("click", async () => { const repo = button.dataset.repoPreset; els.repoInput.value = repo; try { await loadGithubRepo(repo); } catch (error) { setStatus(`GitHub repo load failed: ${error.message}`, true); } }));
 els.demoButton.addEventListener("click", () => { state.data = demoOrg; state.activeRepo = 0; state.mode = "people"; state.activeItemIndex = 0; setModeButton("people"); render(); setStatus("Demo organization loaded. Use rings for scale, teams for collections, and repos for planets."); });
 state.data = demoOrg;
 setViewButton("orbit");
 render();
+
+
 
 
 

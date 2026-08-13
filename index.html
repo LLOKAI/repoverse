@@ -44,6 +44,12 @@
           Token <span class="optional">optional</span>
           <input id="tokenInput" type="password" placeholder="higher limits/private repos" autocomplete="off" />
         </label>
+        <div class="preset-repos" aria-label="Suggested repositories">
+          <span>Try a repo</span>
+          <button class="preset-button" type="button" data-repo-preset="storybookjs/storybook">Storybook</button>
+          <button class="preset-button" type="button" data-repo-preset="microsoft/vscode">VS Code</button>
+          <button class="preset-button" type="button" data-repo-preset="vitejs/vite">Vite</button>
+        </div>
         <p id="statusText" class="status-text" role="status">Demo organization loaded. Load an org for repo planets, or load a repo for contributor drilldown.</p>
       </section>
 
@@ -112,4 +118,6 @@
     <script src="./script.js"></script>
   </body>
 </html>
+
+
 
