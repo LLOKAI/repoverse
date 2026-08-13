@@ -18,32 +18,39 @@
         </div>
         <nav class="top-actions" aria-label="Primary views">
           <button class="tab-button active" type="button" data-view="orbit" aria-pressed="true">Orbit</button>
-          <button class="tab-button" type="button" data-view="repos" aria-pressed="false">Repos</button>
-          <button class="tab-button" type="button" data-view="teams" aria-pressed="false">Teams</button>
-          <button class="tab-button" type="button" data-view="work">Work</button>
+          <button class="tab-button" type="button" data-view="radar" aria-pressed="false">PR Radar</button>
+          <button class="tab-button" type="button" data-view="feed" aria-pressed="false">Activity</button>
+          <button class="tab-button" type="button" data-view="insights" aria-pressed="false">Insights</button>
         </nav>
       </header>
 
-      <section class="command-bar" aria-label="GitHub repository loader">
+      <section class="command-bar" aria-label="GitHub data loader">
         <form id="repoForm" class="repo-form">
           <label>
             Repository
-            <input id="repoInput" type="text" value="vercel/next.js" placeholder="owner/repo" autocomplete="off" />
-          </label>
-          <label>
-            Token <span class="optional">optional</span>
-            <input id="tokenInput" type="password" placeholder="higher limits/private repos" autocomplete="off" />
+            <input id="repoInput" type="text" value="storybookjs/storybook" placeholder="owner/repo" autocomplete="off" />
           </label>
           <button class="primary-button" type="submit">Load Repo</button>
+        </form>
+        <form id="orgForm" class="repo-form">
+          <label>
+            Organization
+            <input id="orgInput" type="text" value="storybookjs" placeholder="org or user" autocomplete="off" />
+          </label>
+          <button class="primary-button" type="submit">Load Org</button>
           <button class="ghost-button" id="demoButton" type="button">Demo Org</button>
         </form>
-        <p id="statusText" class="status-text" role="status">Demo organization loaded. Use the layout controls to collapse, resize, or fullscreen panels.</p>
+        <label class="token-line">
+          Token <span class="optional">optional</span>
+          <input id="tokenInput" type="password" placeholder="higher limits/private repos" autocomplete="off" />
+        </label>
+        <p id="statusText" class="status-text" role="status">Demo organization loaded. Load an org for repo planets, or load a repo for contributor drilldown.</p>
       </section>
 
       <section class="workspace" id="workspace" aria-label="Repository operations workspace">
         <aside class="panel sidebar" id="leftPanel">
           <div class="panel-head">
-            <div><p class="eyebrow">Scope</p><h2>Org Map</h2></div>
+            <div><p class="eyebrow">Scope</p><h2 id="scopeTitle">Org Map</h2></div>
             <button class="mini-button" type="button" data-collapse="leftPanel" aria-label="Collapse scope panel">Hide</button>
           </div>
           <div class="repo-list" id="repoList" aria-label="Repository planets"></div>
@@ -88,6 +95,21 @@
           </div>
           <div class="activity-list" id="activityList"></div>
         </aside>
+      </section>
+
+      <section class="data-dock" id="dataDock" aria-label="Operational data windows">
+        <article class="dock-window">
+          <div class="panel-head"><div><p class="eyebrow">PR Radar</p><h2>Review Flow</h2></div></div>
+          <div class="radar-grid" id="prRadar"></div>
+        </article>
+        <article class="dock-window">
+          <div class="panel-head"><div><p class="eyebrow">Activity</p><h2>Live Feed</h2></div></div>
+          <div class="feed-list" id="activityFeed"></div>
+        </article>
+        <article class="dock-window">
+          <div class="panel-head"><div><p class="eyebrow">Hybrid Intelligence</p><h2>Manager Signals</h2></div></div>
+          <div class="insight-list" id="insightList"></div>
+        </article>
       </section>
     </main>
     <script src="./script.js"></script>
