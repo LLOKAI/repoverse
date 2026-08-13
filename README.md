@@ -2,7 +2,7 @@
 
 RepoVerse is a visual prototype for a live GitHub/codebase activity map.
 
-<img width="2494" height="1027" alt="image" src="https://github.com/user-attachments/assets/4946d94d-8e52-4556-8c69-26af71e665f9" />
+<img width="1618" height="892" alt="Recording 2026-08-13 171628" src="https://github.com/user-attachments/assets/e1650732-666f-4365-a756-0467259bf5a9" />
 
 
 Open `index.html` in a browser to view it. The app is still static-file friendly, but it now has two modes:
