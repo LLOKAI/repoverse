@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RepoVerse Prototype</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar" aria-label="RepoVerse workspace">
+        <div class="brand"><div class="brand-mark" aria-hidden="true">RV</div><div><p class="eyebrow">GitHub Activity Map</p><h1>RepoVerse</h1></div></div>
+        <nav class="top-actions" aria-label="Views"><button class="icon-button active" type="button">Orbit</button><button class="icon-button" type="button">PRs</button><button class="icon-button" type="button">Insights</button></nav>
+      </header>
+      <section class="repo-loader" aria-label="GitHub repository loader">
+        <form id="repoForm" class="repo-form">
+          <label>Repository<input id="repoInput" type="text" value="vercel/next.js" placeholder="owner/repo" autocomplete="off" /></label>
+          <label>GitHub token <span class="optional">optional</span><input id="tokenInput" type="password" placeholder="ghp_... for higher limits/private repos" autocomplete="off" /></label>
+          <button class="primary-button" type="submit">Load Repo</button><button class="ghost-button" id="demoButton" type="button">Demo Mode</button>
+        </form>
+        <p id="statusText" class="status-text">Demo mode is loaded. Enter any public GitHub repo to map real contributors.</p>
+      </section>
+      <section class="workspace" aria-label="Repository activity orbit">
+        <aside class="panel repo-panel"><p class="eyebrow">Central Node</p><h2 id="repoName">repoverse/demo</h2><p id="repoDescription" class="muted">A curated demo of contributor activity, PR summaries, and ownership signals.</p><div class="metric-grid" aria-label="Repository metrics"><div><strong id="starsMetric">12.8k</strong><span>stars</span></div><div><strong id="forksMetric">1.9k</strong><span>forks</span></div><div><strong id="issuesMetric">14</strong><span>open issues</span></div><div><strong id="languageMetric">TypeScript</strong><span>primary language</span></div></div><div class="language-strip" id="languageStrip" aria-label="Language mix"></div></aside>
+        <div class="orbit-stage" id="orbitStage"><div class="starfield" aria-hidden="true"></div><svg class="connections" id="connections" viewBox="0 0 1000 720" role="img" aria-label="Contributor connections to central repository"></svg><button class="core-node" type="button" id="coreNode" aria-label="Repository node"><span class="core-halo"></span><span class="core-logo">{ }</span><span class="core-title" id="coreTitle">repoverse/demo</span><span class="core-subtitle" id="coreSubtitle">demo signal live</span></button><div id="contributorsLayer"></div></div>
+        <aside class="panel detail-panel" id="detailPanel"><p class="eyebrow">Focused Contributor</p><h2 id="detailName">Hover a node</h2><p id="detailSummary" class="muted">Focus any contributor to see latest work, profile signals, and repo impact.</p><div class="activity-list" id="activityList"><div><span></span>Real GitHub contributor avatars</div><div><span></span>Recent commits and open PR context</div><div><span></span>Optional token for richer API access</div></div></aside>
+      </section>
+    </main>
+    <script src="./script.js"></script>
+  </body>
+</html>
