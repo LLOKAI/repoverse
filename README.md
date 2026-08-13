@@ -2,7 +2,10 @@
 
 RepoVerse is a visual prototype for an internal GitHub/codebase activity console.
 
-Open `index.html` in a browser to view it. It is a static site and deploys cleanly on Vercel with no build step.
+<img width="1618" height="892" alt="Recording 2026-08-13 171628" src="https://github.com/user-attachments/assets/e1650732-666f-4365-a756-0467259bf5a9" />
+
+
+Open `index.html` in a browser to view it. The app is still static-file friendly, but it now has two modes:
 
 ## Modes
 
