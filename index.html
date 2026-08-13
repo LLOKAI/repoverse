@@ -3,27 +3,91 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>RepoVerse Prototype</title>
+    <title>RepoVerse Console</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <main class="app-shell">
+    <main class="app-shell" id="appShell">
       <header class="topbar" aria-label="RepoVerse workspace">
-        <div class="brand"><div class="brand-mark" aria-hidden="true">RV</div><div><p class="eyebrow">GitHub Activity Map</p><h1>RepoVerse</h1></div></div>
-        <nav class="top-actions" aria-label="Views"><button class="icon-button active" type="button">Orbit</button><button class="icon-button" type="button">PRs</button><button class="icon-button" type="button">Insights</button></nav>
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">RV</div>
+          <div>
+            <p class="eyebrow">Internal Codebase Console</p>
+            <h1>RepoVerse</h1>
+          </div>
+        </div>
+        <nav class="top-actions" aria-label="Primary views">
+          <button class="tab-button active" type="button" data-view="orbit" aria-pressed="true">Orbit</button>
+          <button class="tab-button" type="button" data-view="repos" aria-pressed="false">Repos</button>
+          <button class="tab-button" type="button" data-view="teams" aria-pressed="false">Teams</button>
+          <button class="tab-button" type="button" data-view="work">Work</button>
+        </nav>
       </header>
-      <section class="repo-loader" aria-label="GitHub repository loader">
+
+      <section class="command-bar" aria-label="GitHub repository loader">
         <form id="repoForm" class="repo-form">
-          <label>Repository<input id="repoInput" type="text" value="vercel/next.js" placeholder="owner/repo" autocomplete="off" /></label>
-          <label>GitHub token <span class="optional">optional</span><input id="tokenInput" type="password" placeholder="ghp_... for higher limits/private repos" autocomplete="off" /></label>
-          <button class="primary-button" type="submit">Load Repo</button><button class="ghost-button" id="demoButton" type="button">Demo Mode</button>
+          <label>
+            Repository
+            <input id="repoInput" type="text" value="vercel/next.js" placeholder="owner/repo" autocomplete="off" />
+          </label>
+          <label>
+            Token <span class="optional">optional</span>
+            <input id="tokenInput" type="password" placeholder="higher limits/private repos" autocomplete="off" />
+          </label>
+          <button class="primary-button" type="submit">Load Repo</button>
+          <button class="ghost-button" id="demoButton" type="button">Demo Org</button>
         </form>
-        <p id="statusText" class="status-text">Demo mode is loaded. Enter any public GitHub repo to map real contributors.</p>
+        <p id="statusText" class="status-text" role="status">Demo organization loaded. Use the layout controls to collapse, resize, or fullscreen panels.</p>
       </section>
-      <section class="workspace" aria-label="Repository activity orbit">
-        <aside class="panel repo-panel"><p class="eyebrow">Central Node</p><h2 id="repoName">repoverse/demo</h2><p id="repoDescription" class="muted">A curated demo of contributor activity, PR summaries, and ownership signals.</p><div class="metric-grid" aria-label="Repository metrics"><div><strong id="starsMetric">12.8k</strong><span>stars</span></div><div><strong id="forksMetric">1.9k</strong><span>forks</span></div><div><strong id="issuesMetric">14</strong><span>open issues</span></div><div><strong id="languageMetric">TypeScript</strong><span>primary language</span></div></div><div class="language-strip" id="languageStrip" aria-label="Language mix"></div></aside>
-        <div class="orbit-stage" id="orbitStage"><div class="starfield" aria-hidden="true"></div><svg class="connections" id="connections" viewBox="0 0 1000 720" role="img" aria-label="Contributor connections to central repository"></svg><button class="core-node" type="button" id="coreNode" aria-label="Repository node"><span class="core-halo"></span><span class="core-logo">{ }</span><span class="core-title" id="coreTitle">repoverse/demo</span><span class="core-subtitle" id="coreSubtitle">demo signal live</span></button><div id="contributorsLayer"></div></div>
-        <aside class="panel detail-panel" id="detailPanel"><p class="eyebrow">Focused Contributor</p><h2 id="detailName">Hover a node</h2><p id="detailSummary" class="muted">Focus any contributor to see latest work, profile signals, and repo impact.</p><div class="activity-list" id="activityList"><div><span></span>Real GitHub contributor avatars</div><div><span></span>Recent commits and open PR context</div><div><span></span>Optional token for richer API access</div></div></aside>
+
+      <section class="workspace" id="workspace" aria-label="Repository operations workspace">
+        <aside class="panel sidebar" id="leftPanel">
+          <div class="panel-head">
+            <div><p class="eyebrow">Scope</p><h2>Org Map</h2></div>
+            <button class="mini-button" type="button" data-collapse="leftPanel" aria-label="Collapse scope panel">Hide</button>
+          </div>
+          <div class="repo-list" id="repoList" aria-label="Repository planets"></div>
+        </aside>
+
+        <section class="stage-wrap" aria-label="Interactive map area">
+          <div class="stage-toolbar">
+            <div class="segmented" role="tablist" aria-label="Map grouping mode">
+              <button class="segment active" type="button" data-mode="people" aria-pressed="true">People</button>
+              <button class="segment" type="button" data-mode="teams" aria-pressed="false">Teams</button>
+              <button class="segment" type="button" data-mode="repos" aria-pressed="false">Repos</button>
+            </div>
+            <div class="toolbar-actions">
+              <button class="mini-button" type="button" id="restorePanels">Panels</button>
+              <button class="mini-button" type="button" id="fullscreenStage">Fullscreen</button>
+            </div>
+          </div>
+          <div class="orbit-stage" id="orbitStage" tabindex="0">
+            <div class="starfield" aria-hidden="true"></div>
+            <svg class="connections" id="connections" viewBox="0 0 1000 720" role="img" aria-label="Contributor, team, and repository relationships"></svg>
+            <div id="ringsLayer" aria-hidden="true"></div>
+            <button class="core-node" type="button" id="coreNode" aria-label="Focused repository node">
+              <span class="core-halo"></span>
+              <span class="core-logo">{ }</span>
+              <span class="core-title" id="coreTitle">repoverse/platform</span>
+              <span class="core-subtitle" id="coreSubtitle">main branch live</span>
+            </button>
+            <div id="nodesLayer"></div>
+          </div>
+        </section>
+
+        <aside class="panel inspector" id="rightPanel">
+          <div class="panel-head">
+            <div><p class="eyebrow">Inspector</p><h2 id="detailName">Hover a node</h2></div>
+            <button class="mini-button" type="button" data-collapse="rightPanel" aria-label="Collapse inspector panel">Hide</button>
+          </div>
+          <p id="detailSummary" class="muted">Focus any person, team, or repo to inspect workstreams, ownership, and risks.</p>
+          <div class="window-tabs" role="tablist" aria-label="Inspector tabs">
+            <button class="window-tab active" type="button" data-tab="activity" aria-pressed="true">Activity</button>
+            <button class="window-tab" type="button" data-tab="ownership" aria-pressed="false">Ownership</button>
+            <button class="window-tab" type="button" data-tab="signals" aria-pressed="false">Signals</button>
+          </div>
+          <div class="activity-list" id="activityList"></div>
+        </aside>
       </section>
     </main>
     <script src="./script.js"></script>

@@ -1,33 +1,43 @@
-const ORBIT_POSITIONS = [
-  { x: 8, y: 9, c1: [410, 245], c2: [315, 170], end: [214, 112] },
-  { x: 73, y: 8, c1: [622, 215], c2: [732, 145], end: [840, 104] },
-  { x: 75, y: 52, c1: [645, 365], c2: [760, 378], end: [888, 420] },
-  { x: 3, y: 76, c1: [377, 420], c2: [262, 498], end: [150, 604] },
-  { x: 42, y: 0, c1: [492, 205], c2: [498, 118], end: [508, 64] },
-  { x: 63, y: 82, c1: [560, 485], c2: [632, 596], end: [744, 650] },
-  { x: 4, y: 42, c1: [365, 342], c2: [240, 325], end: [110, 340] },
-  { x: 71, y: 31, c1: [600, 330], c2: [725, 270], end: [840, 245] }
+const POSITIONS = [
+  { x: 18, y: 18, ring: 1, end: [190, 130], c1: [410, 245], c2: [300, 170] },
+  { x: 78, y: 17, ring: 1, end: [800, 125], c1: [610, 230], c2: [710, 155] },
+  { x: 84, y: 52, ring: 2, end: [860, 375], c1: [640, 360], c2: [770, 360] },
+  { x: 18, y: 78, ring: 2, end: [180, 590], c1: [380, 430], c2: [270, 510] },
+  { x: 50, y: 9, ring: 1, end: [500, 66], c1: [500, 230], c2: [500, 130] },
+  { x: 69, y: 80, ring: 2, end: [710, 600], c1: [565, 470], c2: [635, 565] },
+  { x: 13, y: 48, ring: 2, end: [120, 345], c1: [360, 350], c2: [245, 330] },
+  { x: 74, y: 37, ring: 1, end: [760, 265], c1: [595, 330], c2: [685, 285] }
 ];
 const COLORS = ["#58a6ff", "#db61a2", "#3fb950", "#d29922", "#a371f7", "#f85149", "#39c5cf", "#ff7b72"];
-const demoRepo = {
-  name: "repoverse/demo", description: "A curated demo of contributor activity, PR summaries, and ownership signals.", stars: "12.8k", forks: "1.9k", issues: "14", language: "TypeScript", subtitle: "demo signal live",
-  languages: { TypeScript: 58, CSS: 19, JavaScript: 17, HTML: 6 },
+const state = { mode: "people", tab: "activity", activeRepo: 0, data: null };
+const demoOrg = {
+  org: "RepoVerse Platform",
+  repos: [
+    { name: "repoverse/platform", summary: "Product shell, graph UI, and GitHub ingestion", stars: "12.8k", forks: "1.9k", issues: "14", language: "TypeScript", health: "Stable", activity: ["4 teams active", "23 PRs in flight", "Auth surface under review"] },
+    { name: "repoverse/collector", summary: "Workers that normalize GitHub events and ownership signals", stars: "2.4k", forks: "318", issues: "7", language: "Go", health: "Watch", activity: ["Queue lag up 8%", "Webhook retries patched", "Needs schema migration"] },
+    { name: "repoverse/mobile", summary: "Manager and contributor companion views", stars: "846", forks: "90", issues: "21", language: "Swift", health: "At risk", activity: ["Design QA blocked", "Notifications refactor", "Beta crash triage"] }
+  ],
+  teams: [
+    { name: "Platform", summary: "Runtime, CI, API contracts", count: "5 people", activity: ["Owns collector and schema packages", "Two deploy-risk PRs", "Review SLA: 4.2h"], ownership: ["API contracts", "CI reliability", "Release gates"], signals: ["Build failures concentrated in collector", "Schema churn is trending down"] },
+    { name: "Product", summary: "Orbit experience and profile surfaces", count: "4 people", activity: ["Dashboard windows split into modules", "Profile panel redesign ready", "Design debt: medium"], ownership: ["Console shell", "Contributor cards", "Team views"], signals: ["High PR velocity", "Low incident load"] },
+    { name: "Security", summary: "Auth, tokens, private repo access", count: "3 people", activity: ["OAuth backend proposal", "Token storage review", "Audit logging model"], ownership: ["GitHub app auth", "Permissions", "Audit trail"], signals: ["Private repo path not production-ready", "Token scope guidance needed"] }
+  ],
   people: [
-    { login: "mira", name: "Mira Chen", avatar: "", count: 42, summary: "Split billing webhooks into typed event handlers.", detail: "Backend lead for billing events. Latest work extracts webhook handling into typed, testable event modules.", activity: ["PR #4821 awaiting final review", "Owns billing-webhooks and event-store", "Raised service test coverage by 14%"] },
-    { login: "kai", name: "Kai Patel", avatar: "", count: 31, summary: "Reviewing auth migration and token refresh edge cases.", detail: "Security-minded reviewer focused on auth migration, token refresh paths, and session expiry behavior.", activity: ["Reviewed 4 PRs today", "Flagged 2 session expiry regressions", "Maintains auth middleware"] },
-    { login: "nova", name: "Nova Alvarez", avatar: "", count: 28, summary: "Shipping usage dashboards with streaming query cache.", detail: "Product engineer building the live usage dashboard and streaming query cache.", activity: ["Feature branch analytics-live", "Touched dashboard, API, and cache layers", "Unblocked reporting epic"] },
-    { login: "sol", name: "Sol Morgan", avatar: "", count: 24, summary: "Reduced flaky integration tests in checkout pipeline.", detail: "Reliability contributor improving checkout pipeline confidence and CI speed.", activity: ["CI pass rate trending up", "Quarantined 3 unstable specs", "Cut checkout test runtime by 18%"] },
-    { login: "juno", name: "Juno Wright", avatar: "", count: 19, summary: "Owns API schema cleanup and breaking-change notes.", detail: "API steward cleaning schema drift and documenting breaking changes before release.", activity: ["12 endpoints updated", "OpenAPI diff ready", "Migration notes drafted"] },
-    { login: "ren", name: "Ren Okafor", avatar: "", count: 17, summary: "Pairing on search latency and index warming.", detail: "Performance contributor pairing on search latency, index warming, and query tracing.", activity: ["p95 latency down 23%", "Added trace spans to search-api", "Pairing with platform team"] }
+    { name: "Mira Chen", role: "Backend Lead", team: "Platform", avatar: "", count: 42, summary: "Splitting billing webhooks into typed event handlers.", activity: ["PR #4821 awaiting final review", "Owns billing-webhooks and event-store", "Raised service test coverage by 14%"], ownership: ["billing-webhooks", "event-store", "release notes"], signals: ["Review load high", "Low merge risk"] },
+    { name: "Kai Patel", role: "Security", team: "Security", avatar: "", count: 31, summary: "Reviewing auth migration and token refresh edge cases.", activity: ["Reviewed 4 PRs today", "Flagged 2 session expiry regressions", "Maintains auth middleware"], ownership: ["auth middleware", "session handling", "token policy"], signals: ["OAuth design needs backend", "Two blockers closed"] },
+    { name: "Nova Alvarez", role: "Product Engineer", team: "Product", avatar: "", count: 28, summary: "Shipping usage dashboards with streaming query cache.", activity: ["Feature branch analytics-live", "Touched dashboard, API, and cache layers", "Unblocked reporting epic"], ownership: ["analytics UI", "query cache", "usage surfaces"], signals: ["Fast cycle time", "Cross-layer changes"] },
+    { name: "Sol Morgan", role: "Reliability", team: "Platform", avatar: "", count: 24, summary: "Reducing flaky tests in checkout pipeline.", activity: ["CI pass rate trending up", "Quarantined 3 unstable specs", "Cut checkout test runtime by 18%"], ownership: ["checkout tests", "CI pipelines", "test quarantine"], signals: ["Reliability improving", "Needs one more green run"] },
+    { name: "Juno Wright", role: "API Steward", team: "Platform", avatar: "", count: 19, summary: "Cleaning schema drift and breaking-change notes.", activity: ["12 endpoints updated", "OpenAPI diff ready", "Migration notes drafted"], ownership: ["OpenAPI", "SDK compatibility", "migration docs"], signals: ["Breaking-change risk visible", "Docs nearly ready"] },
+    { name: "Ren Okafor", role: "Performance", team: "Product", avatar: "", count: 17, summary: "Pairing on search latency and index warming.", activity: ["p95 latency down 23%", "Added trace spans to search-api", "Pairing with platform team"], ownership: ["search-api", "index warming", "query tracing"], signals: ["Latency trend healthy", "Needs load replay"] }
   ]
 };
 const els = {
-  repoForm: document.querySelector("#repoForm"), repoInput: document.querySelector("#repoInput"), tokenInput: document.querySelector("#tokenInput"), demoButton: document.querySelector("#demoButton"), statusText: document.querySelector("#statusText"),
-  repoName: document.querySelector("#repoName"), repoDescription: document.querySelector("#repoDescription"), starsMetric: document.querySelector("#starsMetric"), forksMetric: document.querySelector("#forksMetric"), issuesMetric: document.querySelector("#issuesMetric"), languageMetric: document.querySelector("#languageMetric"), languageStrip: document.querySelector("#languageStrip"),
-  coreTitle: document.querySelector("#coreTitle"), coreSubtitle: document.querySelector("#coreSubtitle"), connections: document.querySelector("#connections"), contributorsLayer: document.querySelector("#contributorsLayer"), detailName: document.querySelector("#detailName"), detailSummary: document.querySelector("#detailSummary"), activityList: document.querySelector("#activityList")
+  workspace: document.querySelector("#workspace"), repoForm: document.querySelector("#repoForm"), repoInput: document.querySelector("#repoInput"), tokenInput: document.querySelector("#tokenInput"), demoButton: document.querySelector("#demoButton"), statusText: document.querySelector("#statusText"),
+  repoList: document.querySelector("#repoList"), coreTitle: document.querySelector("#coreTitle"), coreSubtitle: document.querySelector("#coreSubtitle"), connections: document.querySelector("#connections"), ringsLayer: document.querySelector("#ringsLayer"), nodesLayer: document.querySelector("#nodesLayer"), stageWrap: document.querySelector(".stage-wrap"), fullscreenStage: document.querySelector("#fullscreenStage"), restorePanels: document.querySelector("#restorePanels"),
+  detailName: document.querySelector("#detailName"), detailSummary: document.querySelector("#detailSummary"), activityList: document.querySelector("#activityList")
 };
-function formatNumber(value) { return new Intl.NumberFormat("en", { notation: "compact" }).format(value || 0); }
 function escapeHtml(value) { return String(value || "").replace(/[&<>"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[char])); }
+function formatNumber(value) { return new Intl.NumberFormat("en", { notation: "compact" }).format(value || 0); }
 function setStatus(message, isError = false) { els.statusText.textContent = message; els.statusText.classList.toggle("error", isError); }
 function headers() { const token = els.tokenInput.value.trim() || localStorage.getItem("repoverse.githubToken") || ""; return token ? { Authorization: `Bearer ${token}`, Accept: "application/vnd.github+json" } : { Accept: "application/vnd.github+json" }; }
 async function github(path) { const res = await fetch(`https://api.github.com${path}`, { headers: headers() }); if (!res.ok) throw new Error(`${res.status} ${res.statusText}`); return res.json(); }
@@ -35,35 +45,28 @@ async function loadGithubRepo(fullName) {
   const match = fullName.trim().match(/^([\w.-]+)\/([\w.-]+)$/); if (!match) throw new Error("Use owner/repo format, for example vercel/next.js");
   if (els.tokenInput.value.trim()) localStorage.setItem("repoverse.githubToken", els.tokenInput.value.trim());
   const [, owner, repo] = match; setStatus(`Loading ${owner}/${repo} from GitHub...`);
-  const [repoData, contributors, pulls, commits, languages] = await Promise.all([
-    github(`/repos/${owner}/${repo}`), github(`/repos/${owner}/${repo}/contributors?per_page=8`), github(`/repos/${owner}/${repo}/pulls?state=open&per_page=20`), github(`/repos/${owner}/${repo}/commits?per_page=20`), github(`/repos/${owner}/${repo}/languages`)
-  ]);
-  const people = contributors.slice(0, 8).map((c) => {
-    const commit = commits.find((item) => item.author && item.author.login === c.login) || commits.find((item) => item.commit.author && item.commit.author.name === c.login);
-    const pr = pulls.find((item) => item.user && item.user.login === c.login);
-    const title = pr ? `Open PR: ${pr.title}` : commit ? commit.commit.message.split("\n")[0] : "Recent contribution activity detected";
-    return { login: c.login, name: c.login, avatar: c.avatar_url, count: c.contributions, summary: title, detail: `${c.login} has ${c.contributions} public contributions in this repository snapshot.`, activity: [pr ? `PR #${pr.number} is open` : "No open PR in the first page", commit ? `Latest commit: ${commit.commit.message.split("\n")[0]}` : "No recent commit in the first page", `GitHub profile: ${c.html_url}`] };
-  });
-  render({ name: repoData.full_name, description: repoData.description || "No repository description provided.", stars: formatNumber(repoData.stargazers_count), forks: formatNumber(repoData.forks_count), issues: formatNumber(repoData.open_issues_count), language: repoData.language || "Mixed", subtitle: `${repoData.default_branch} branch live`, languages, people });
-  setStatus(`Loaded ${repoData.full_name}. Showing top ${people.length} contributors, recent commits, and open PR context.`);
+  const [repoData, contributors, pulls, commits, languages] = await Promise.all([github(`/repos/${owner}/${repo}`), github(`/repos/${owner}/${repo}/contributors?per_page=8`), github(`/repos/${owner}/${repo}/pulls?state=open&per_page=20`), github(`/repos/${owner}/${repo}/commits?per_page=20`), github(`/repos/${owner}/${repo}/languages`)]);
+  const people = contributors.slice(0, 8).map((c) => { const commit = commits.find((item) => item.author && item.author.login === c.login); const pr = pulls.find((item) => item.user && item.user.login === c.login); return { name: c.login, role: "Contributor", team: "Repository", avatar: c.avatar_url, count: c.contributions, summary: pr ? `Open PR: ${pr.title}` : commit ? commit.commit.message.split("\n")[0] : "Recent contribution activity detected", activity: [pr ? `PR #${pr.number} is open` : "No open PR in the first page", commit ? `Latest commit: ${commit.commit.message.split("\n")[0]}` : "No recent commit in the first page", `GitHub profile: ${c.html_url}`], ownership: ["Public contributor stats", "Recent commits", "Open pull requests"], signals: [`${c.contributions} public contributions`, "Live GitHub API snapshot"] }; });
+  const languageNames = Object.keys(languages).slice(0, 3);
+  state.data = { org: owner, repos: [{ name: repoData.full_name, summary: repoData.description || "No repository description provided.", stars: formatNumber(repoData.stargazers_count), forks: formatNumber(repoData.forks_count), issues: formatNumber(repoData.open_issues_count), language: repoData.language || "Mixed", health: "Live", activity: [`${formatNumber(repoData.open_issues_count)} open issues`, `${formatNumber(repoData.forks_count)} forks`, `${languageNames.join(", ") || "No language data"}`] }], teams: buildTeamsFromPeople(people), people };
+  state.activeRepo = 0; state.mode = "people"; updatePressed(".segment", "people", "mode"); render(); setStatus(`Loaded ${repoData.full_name}. Showing contributors, recent commits, open PRs, and repository health.`);
 }
-function render(data) {
-  els.repoName.textContent = data.name; els.repoDescription.textContent = data.description; els.starsMetric.textContent = data.stars; els.forksMetric.textContent = data.forks; els.issuesMetric.textContent = data.issues; els.languageMetric.textContent = data.language; els.coreTitle.textContent = data.name; els.coreSubtitle.textContent = data.subtitle;
-  renderLanguages(data.languages); renderConnections(data.people.length); renderContributors(data.people); focusPerson(data.people[0]);
-}
-function renderLanguages(languages) {
-  const total = Object.values(languages || {}).reduce((sum, value) => sum + value, 0) || 1;
-  els.languageStrip.innerHTML = Object.entries(languages || {}).slice(0, 6).map(([name, value], index) => `<span title="${escapeHtml(name)}" style="width:${(value / total) * 100}%;background:${COLORS[index % COLORS.length]}"></span>`).join("");
-}
-function renderConnections(count) {
-  els.connections.innerHTML = `<defs><linearGradient id="lineA" x1="0%" x2="100%"><stop offset="0%" stop-color="#58a6ff"/><stop offset="54%" stop-color="#3fb950"/><stop offset="100%" stop-color="#db61a2"/></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>` + ORBIT_POSITIONS.slice(0, count).map((pos, index) => `<path data-index="${index}" d="M500 360 C${pos.c1[0]} ${pos.c1[1]} ${pos.c2[0]} ${pos.c2[1]} ${pos.end[0]} ${pos.end[1]}"/>`).join("");
-}
-function renderContributors(people) {
-  els.contributorsLayer.innerHTML = people.map((person, index) => { const pos = ORBIT_POSITIONS[index]; const color = COLORS[index % COLORS.length]; const avatar = person.avatar ? `<img src="${escapeHtml(person.avatar)}" alt=""/>` : `<span class="avatar-fallback">${escapeHtml(person.name.slice(0, 1).toUpperCase())}</span>`; return `<article class="contributor" data-index="${index}" tabindex="0" style="left:${pos.x}%;top:${pos.y}%;--shirt:${color}"><div class="avatar">${avatar}</div><div class="bubble"><strong>${escapeHtml(person.name)}</strong><p>${escapeHtml(person.summary)}</p><small>${escapeHtml(person.count)} contributions</small></div></article>`; }).join("");
-  document.querySelectorAll(".contributor").forEach((node) => { const index = Number(node.dataset.index); node.addEventListener("mouseenter", () => focusPerson(people[index], index)); node.addEventListener("focus", () => focusPerson(people[index], index)); node.addEventListener("mouseleave", resetLines); node.addEventListener("blur", resetLines); });
-}
-function focusPerson(person, index = 0) { if (!person) return; els.detailName.textContent = person.name; els.detailSummary.textContent = person.detail; els.activityList.innerHTML = person.activity.map((item) => `<div><span></span>${escapeHtml(item)}</div>`).join(""); document.querySelectorAll(".connections path").forEach((line) => { const focused = Number(line.dataset.index) === index; line.style.opacity = focused ? "1" : "0.2"; line.style.strokeWidth = focused ? "4" : "2.5"; }); }
-function resetLines() { document.querySelectorAll(".connections path").forEach((line) => { line.style.opacity = "0.82"; line.style.strokeWidth = "2.5"; }); }
+function buildTeamsFromPeople(people) { return [{ name: "Core Contributors", summary: "Top public contributors in the current GitHub snapshot", count: `${people.length} people`, activity: people.slice(0, 3).map((person) => `${person.name}: ${person.summary}`), ownership: ["Repository activity", "Commit history", "Open PR context"], signals: ["Teams require org metadata or CODEOWNERS in a production integration"] }]; }
+function render() { const data = state.data; const repo = data.repos[state.activeRepo]; els.coreTitle.textContent = repo.name; els.coreSubtitle.textContent = `${repo.health} - ${repo.language}`; renderRepoList(data.repos); renderRings(); renderConnections(getNodes().length); renderNodes(getNodes()); focusItem(getNodes()[0], 0); }
+function getNodes() { if (state.mode === "repos") return state.data.repos.map((repo) => ({ ...repo, kind: "repo", count: repo.issues, detail: repo.summary, ownership: ["Repository planet", "Issue load", "Primary language"], signals: repo.activity })); if (state.mode === "teams") return state.data.teams.map((team) => ({ ...team, kind: "team", detail: team.summary })); return state.data.people.map((person) => ({ ...person, kind: "person", detail: `${person.role} on ${person.team}. ${person.summary}` })); }
+function renderRepoList(repos) { els.repoList.innerHTML = repos.map((repo, index) => `<button class="repo-card ${index === state.activeRepo ? "active" : ""}" type="button" data-repo="${index}"><strong>${escapeHtml(repo.name)}</strong><span>${escapeHtml(repo.summary)}</span><div class="repo-meta"><small>${escapeHtml(repo.language)}</small><small>${escapeHtml(repo.stars)} stars</small><small>${escapeHtml(repo.health)}</small></div></button>`).join(""); document.querySelectorAll(".repo-card").forEach((button) => button.addEventListener("click", () => { state.activeRepo = Number(button.dataset.repo); render(); })); }
+function renderRings() { const labels = state.mode === "repos" ? ["Product Planets", "Supporting Services"] : state.mode === "teams" ? ["Core Teams", "Partner Teams"] : ["Active Owners", "Review + Support"]; els.ringsLayer.innerHTML = labels.map((label, index) => `<div class="ring" style="width:${index ? 78 : 48}%;height:${index ? 78 : 48}%"><span>${escapeHtml(label)}</span></div>`).join(""); }
+function renderConnections(count) { els.connections.innerHTML = `<defs><linearGradient id="lineA" x1="0%" x2="100%"><stop offset="0%" stop-color="#58a6ff"/><stop offset="54%" stop-color="#3fb950"/><stop offset="100%" stop-color="#db61a2"/></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>` + POSITIONS.slice(0, count).map((pos, index) => `<path data-index="${index}" d="M500 360 C${pos.c1[0]} ${pos.c1[1]} ${pos.c2[0]} ${pos.c2[1]} ${pos.end[0]} ${pos.end[1]}"/>`).join(""); }
+function renderNodes(nodes) { els.nodesLayer.innerHTML = nodes.map((item, index) => { const pos = POSITIONS[index]; const accent = COLORS[index % COLORS.length]; const visual = item.kind === "repo" ? `<div class="planet" aria-hidden="true"></div>` : `<div class="avatar">${item.avatar ? `<img src="${escapeHtml(item.avatar)}" alt=""/>` : `<span class="fallback">${escapeHtml(item.name.slice(0, 1).toUpperCase())}</span>`}</div>`; return `<article class="node" data-index="${index}" tabindex="0" style="left:${pos.x}%;top:${pos.y}%;--accent:${accent}">${visual}<div class="bubble"><strong>${escapeHtml(item.name)}</strong><p>${escapeHtml(item.summary)}</p><small>${escapeHtml(item.count || item.role || item.health || "active")}</small></div></article>`; }).join(""); document.querySelectorAll(".node").forEach((node) => { const index = Number(node.dataset.index); node.addEventListener("mouseenter", () => focusItem(nodes[index], index)); node.addEventListener("focus", () => focusItem(nodes[index], index)); node.addEventListener("mouseleave", resetLines); node.addEventListener("blur", resetLines); }); }
+function focusItem(item, index = 0) { if (!item) return; els.detailName.textContent = item.name; els.detailSummary.textContent = item.detail || item.summary; const list = item[state.tab] || item.activity || []; els.activityList.innerHTML = list.map((entry) => `<div><span></span>${escapeHtml(entry)}</div>`).join(""); document.querySelectorAll(".connections path").forEach((line) => { const active = Number(line.dataset.index) === index; line.style.opacity = active ? "1" : ".2"; line.style.strokeWidth = active ? "4" : "2.5"; }); }
+function resetLines() { document.querySelectorAll(".connections path").forEach((line) => { line.style.opacity = ".78"; line.style.strokeWidth = "2.5"; }); }
+function updatePressed(selector, value, key) { document.querySelectorAll(selector).forEach((button) => { const active = button.dataset[key] === value; button.classList.toggle("active", active); button.setAttribute("aria-pressed", String(active)); }); }
+document.querySelectorAll(".segment").forEach((button) => button.addEventListener("click", () => { state.mode = button.dataset.mode; updatePressed(".segment", state.mode, "mode"); render(); }));
+document.querySelectorAll(".window-tab").forEach((button) => button.addEventListener("click", () => { state.tab = button.dataset.tab; updatePressed(".window-tab", state.tab, "tab"); focusItem(getNodes()[0], 0); }));
+document.querySelectorAll("[data-collapse]").forEach((button) => button.addEventListener("click", () => els.workspace.classList.toggle(button.dataset.collapse === "leftPanel" ? "left-collapsed" : "right-collapsed")));
+els.restorePanels.addEventListener("click", () => els.workspace.classList.remove("left-collapsed", "right-collapsed"));
+els.fullscreenStage.addEventListener("click", () => { const full = els.stageWrap.classList.toggle("fullscreen"); els.fullscreenStage.textContent = full ? "Exit" : "Fullscreen"; });
 els.repoForm.addEventListener("submit", async (event) => { event.preventDefault(); try { await loadGithubRepo(els.repoInput.value); } catch (error) { setStatus(`GitHub load failed: ${error.message}`, true); } });
-els.demoButton.addEventListener("click", () => { render(demoRepo); setStatus("Demo mode is loaded. Enter any public GitHub repo to map real contributors."); });
-render(demoRepo);
+els.demoButton.addEventListener("click", () => { state.data = demoOrg; state.activeRepo = 0; state.mode = "people"; updatePressed(".segment", "people", "mode"); render(); setStatus("Demo organization loaded. Use rings for scale, teams for collections, and repos for planets."); });
+state.data = demoOrg;
+render();
