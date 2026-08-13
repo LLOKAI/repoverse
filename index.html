@@ -47,7 +47,7 @@
         <p id="statusText" class="status-text" role="status">Demo organization loaded. Load an org for repo planets, or load a repo for contributor drilldown.</p>
       </section>
 
-      <section class="workspace" id="workspace" aria-label="Repository operations workspace">
+      <section class="workspace" id="workspace" data-view-panel="orbit" aria-label="Repository operations workspace">
         <aside class="panel sidebar" id="leftPanel">
           <div class="panel-head">
             <div><p class="eyebrow">Scope</p><h2 id="scopeTitle">Org Map</h2></div>
@@ -97,17 +97,14 @@
         </aside>
       </section>
 
-      <section class="data-dock" id="dataDock" aria-label="Operational data windows">
-        <article class="dock-window">
-          <div class="panel-head"><div><p class="eyebrow">PR Radar</p><h2>Review Flow</h2></div></div>
+      <section class="data-dock" id="dataDock" data-view-panel="dock" aria-label="Operational data windows">
+        <article class="dock-window" data-dock-view="radar"><div class="panel-head"><div><p class="eyebrow">PR Radar</p><h2>Review Flow</h2></div></div>
           <div class="radar-grid" id="prRadar"></div>
         </article>
-        <article class="dock-window">
-          <div class="panel-head"><div><p class="eyebrow">Activity</p><h2>Live Feed</h2></div></div>
+        <article class="dock-window" data-dock-view="feed"><div class="panel-head"><div><p class="eyebrow">Activity</p><h2>Live Feed</h2></div></div>
           <div class="feed-list" id="activityFeed"></div>
         </article>
-        <article class="dock-window">
-          <div class="panel-head"><div><p class="eyebrow">Hybrid Intelligence</p><h2>Manager Signals</h2></div></div>
+        <article class="dock-window" data-dock-view="insights"><div class="panel-head"><div><p class="eyebrow">Hybrid Intelligence</p><h2>Manager Signals</h2></div></div>
           <div class="insight-list" id="insightList"></div>
         </article>
       </section>
@@ -115,3 +112,4 @@
     <script src="./script.js"></script>
   </body>
 </html>
+

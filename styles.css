@@ -98,3 +98,26 @@ h1, h2, p { margin-top: 0; } h1 { margin-bottom: 0; font-size: clamp(1.45rem, 2v
 .repo-form { align-items: end; }
 @media (max-width: 1120px) { .command-bar, .data-dock { grid-template-columns: 1fr; } .radar-grid { grid-template-columns: repeat(2, minmax(130px, 1fr)); } }
 @media (max-width: 700px) { .radar-grid { grid-template-columns: 1fr; } .dock-window { max-height: none; } }
+.app-shell[data-active-view="radar"] .workspace,
+.app-shell[data-active-view="feed"] .workspace,
+.app-shell[data-active-view="insights"] .workspace { display: none; }
+.app-shell[data-active-view="orbit"] .data-dock { grid-template-columns: 1.1fr 1fr 1fr; }
+.app-shell[data-active-view="radar"] .data-dock,
+.app-shell[data-active-view="feed"] .data-dock,
+.app-shell[data-active-view="insights"] .data-dock { display: block; min-height: calc(100vh - 150px); }
+.app-shell[data-active-view="radar"] .dock-window,
+.app-shell[data-active-view="feed"] .dock-window,
+.app-shell[data-active-view="insights"] .dock-window { display: none; }
+.app-shell[data-active-view="radar"] [data-dock-view="radar"],
+.app-shell[data-active-view="feed"] [data-dock-view="feed"],
+.app-shell[data-active-view="insights"] [data-dock-view="insights"] { display: block; max-height: none; min-height: calc(100vh - 170px); resize: none; }
+.app-shell[data-active-view="radar"] .radar-grid { grid-template-columns: repeat(5, minmax(160px, 1fr)); align-items: start; }
+.app-shell[data-active-view="feed"] .feed-list { position: relative; padding-left: 18px; }
+.app-shell[data-active-view="feed"] .feed-list:before { content: ""; position: absolute; left: 4px; top: 0; bottom: 0; border-left: 1px solid var(--border); }
+.app-shell[data-active-view="feed"] .feed-item { position: relative; }
+.app-shell[data-active-view="feed"] .feed-item:before { content: ""; position: absolute; left: -19px; top: 18px; width: 9px; height: 9px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 14px var(--blue); }
+.node[data-kind="repo"] { cursor: pointer; }
+.node[data-kind="repo"] .planet { width: var(--planet-size, 58px); height: var(--planet-size, 58px); }
+.ownership-label { position: absolute; transform: translate(-50%, -50%); border: 1px solid var(--border); background: rgba(1,4,9,.86); color: var(--muted); padding: 3px 7px; font-size: .7rem; pointer-events: none; white-space: nowrap; }
+@media (max-width: 1120px) { .app-shell[data-active-view="radar"] .radar-grid { grid-template-columns: repeat(2, minmax(160px, 1fr)); } }
+@media (max-width: 700px) { .app-shell[data-active-view="radar"] .radar-grid { grid-template-columns: 1fr; } }

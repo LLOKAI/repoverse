@@ -8,7 +8,7 @@ RepoVerse is a static prototype for an internal GitHub/codebase activity console
 - GitHub Repo mode for `owner/repo` drilldown.
 - GitHub Org/User mode for public repository planets.
 - People, Teams, and Repos orbit modes.
-- Repo planets for multi-repo organizations.
+- Repo planets for multi-repo organizations, with size influenced by activity/load and click-to-drilldown into contributor orbit mode.
 - Contributor avatars, contribution counts, recent commits, and open PR context.
 - PR Radar grouped into Draft, Needs Review, Changes Requested, and Approved demo states.
 - Live Activity feed from sampled GitHub events and commits.
@@ -49,3 +49,4 @@ Orgs/users:
 ## Product Direction
 
 The recommended strategy is hybrid: use real GitHub data for repos, avatars, PRs, commits, labels, events, and counts; use enriched summaries for ownership, team grouping, review risk, and manager-facing insights until a backend intelligence layer exists.
+
