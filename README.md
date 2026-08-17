@@ -2,6 +2,10 @@
 
 RepoVerse is a static prototype for an internal GitHub/codebase activity console. It deploys on Vercel with no build step.
 
+<img width="1628" height="980" alt="image" src="https://github.com/user-attachments/assets/d7aa973f-8970-40f6-bbf1-a35ac9f7193b" />
+
+
+
 ## Current Capabilities
 
 - Demo Org mode with curated multi-repo data.
